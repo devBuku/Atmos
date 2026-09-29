@@ -92,10 +92,10 @@ type Series = (number | null)[];
 
 export async function getWeather({
   lat,
-  lon,
+  lng: lon,
 }: {
   lat: number;
-  lon: number;
+  lng: number;
 }): Promise<Weather> {
   const params = new URLSearchParams({
     latitude: String(lat),

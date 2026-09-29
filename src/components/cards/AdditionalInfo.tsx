@@ -1,13 +1,14 @@
-import { useSuspenseQuery } from "@tanstack/react-query";
 import Card from "./Card";
-import { getWeather } from "../../api";
 import clsx from "clsx";
+import { useWeather } from "../../hooks/useWeather";
+import type { Coords } from "../../types";
 
-export default function AdditionalInfo() {
-  const { data } = useSuspenseQuery({
-    queryKey: ["weather"],
-    queryFn: () => getWeather({ lat: 10, lon: 25 }),
-  });
+type Props = {
+  coords: Coords;
+};
+
+export default function AdditionalInfo({ coords }: Props) {
+  const { data } = useWeather(coords);
   return (
     <Card
       title="Additional Weather Info"
@@ -17,7 +18,10 @@ export default function AdditionalInfo() {
         <div className="flex justify-between" key={value}>
           <div className="flex gap-4">
             <span className="text-gray-500">{label}</span>
-            <i className={clsx("wi text-2xl invert", icon)} aria-hidden="true" />
+            <i
+              className={clsx("wi text-2xl invert", icon)}
+              aria-hidden="true"
+            />
           </div>
           <span>
             <FormatComponent value={value} number={data.current[value]} />
