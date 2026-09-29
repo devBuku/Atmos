@@ -1,5 +1,6 @@
 import type { z } from "zod";
 import { weatherSchema } from "./schemas/weatherSchema";
+import { GeocodeSchema, OpenMeteoGeocodeResponse } from "./schemas/geoCodeSchema";
 
 export type Weather = z.infer<typeof weatherSchema>;
 
@@ -209,4 +210,29 @@ export async function getWeather({
     hourly: hourly.slice(start, start + 48), // OpenWeather gives 48 hours from now
     daily,
   });
+}
+export async function getGeocode(location: string) {
+  const params = new URLSearchParams({
+    name: location,
+    count: "5",
+    language: "en",
+    format: "json",
+  });
+
+  const res = await fetch(
+    `https://geocoding-api.open-meteo.com/v1/search?${params}`,
+  );
+  if (!res.ok) throw new Error(`Geocoding request failed: ${res.status}`);
+
+  const raw = OpenMeteoGeocodeResponse.parse(await res.json());
+
+  const mapped = (raw.results ?? []).map((r) => ({
+    name: r.name,
+    lat: r.latitude,
+    lon: r.longitude,
+    country: r.country ?? "",
+    state: r.admin1,
+  }));
+
+  return GeocodeSchema.parse(mapped);
 }

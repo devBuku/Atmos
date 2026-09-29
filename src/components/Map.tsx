@@ -18,7 +18,11 @@ type Props = {
 function Map({ coords, onMapClick }: Props) {
   const { lat, lng } = coords;
   return (
-    <MapContainer center={[lat, lng]} zoom={5} className="h-[500px] w-full">
+    <MapContainer
+      center={[lat, lng]}
+      zoom={5}
+      className="relative z-0 h-125 w-full"
+    >
       <MapController coords={coords} onMapClick={onMapClick} />
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
