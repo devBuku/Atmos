@@ -15,8 +15,6 @@ function App() {
 
   return (
     <div className="flex flex-col gap-8">
-      {/* Kept outside the boundary: remounting MapContainer would rebuild the
-          Leaflet map and throw away the user's zoom/pan on every click. */}
       <Map coords={coords} onMapClick={handleMapClick} />
       <Suspense fallback={<WeatherSkeleton />}>
         <CurrentWeather coords={coords} />
