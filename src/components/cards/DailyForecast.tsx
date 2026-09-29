@@ -3,8 +3,7 @@ import { getWeather } from "../../api";
 import Card from "./Card";
 import WeatherIcon from "../WeatherIcon";
 
-type Props = {};
-const DailyForecast = ({}: Props) => {
+const DailyForecast = () => {
   const { data } = useSuspenseQuery({
     queryKey: ["weather"],
     queryFn: () => getWeather({ lat: 10, lon: 25 }),
