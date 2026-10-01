@@ -2,27 +2,57 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Atmos — Fast, responsive weather & air quality dashboard powered by Open-Meteo" />
+
+    <!-- SEO & description -->
+    <title>Atmos — Weather &amp; Air Quality Dashboard</title>
+    <meta name="description" content="Real-time weather dashboard with air quality data. Click any location on the map or search a city. Powered by Open-Meteo, no API key required." />
+    <meta name="keywords" content="weather, air quality, AQI, forecast, open-meteo, dashboard" />
+    <link rel="canonical" href="https://atmos.vercel.app/" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Atmos — Weather &amp; Air Quality Dashboard" />
+    <meta property="og:description" content="Real-time weather dashboard with air quality data. Click any location on the map or search a city. Powered by Open-Meteo." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://atmos.vercel.app/" />
+    <meta property="og:site_name" content="Atmos" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Atmos — Weather &amp; Air Quality" />
+    <meta name="twitter:description" content="Real-time weather &amp; air quality dashboard, no API key needed." />
+
+    <!-- Theme color: dark / light -->
     <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-    <title>Atmos — Weather & Air Quality</title>
+    <meta name="theme-color" content="#f4f4f5" media="(prefers-color-scheme: light)" />
+
+    <!-- Web app manifest & favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Atmos" />
+
+    <!-- Preconnect to Open-Meteo APIs and tile server -->
+    <link rel="preconnect" href="https://api.open-meteo.com" />
+    <link rel="preconnect" href="https://geocoding-api.open-meteo.com" />
+    <link rel="preconnect" href="https://air-quality-api.open-meteo.com" />
+    <link rel="preconnect" href="https://basemaps.cartocdn.com" crossorigin="" />
+
+    <!-- No-FOUC theme script: run before any CSS -->
     <script>
-      (function() {
+      (function () {
         try {
           var saved = localStorage.getItem('atmos_theme');
-          var isDark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
-          if (isDark) {
-            document.documentElement.classList.add('dark');
-          } else {
-            document.documentElement.classList.remove('dark');
-          }
+          var isDark = saved
+            ? saved === 'dark'
+            : window.matchMedia('(prefers-color-scheme: dark)').matches;
+          document.documentElement.classList.toggle('dark', isDark);
         } catch (e) {}
       })();
     </script>
   </head>
-  <body class="bg-background text-foreground antialiased min-h-screen">
+  <body class="antialiased">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

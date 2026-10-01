@@ -10,6 +10,8 @@ import LocationCombobox, {
 import Header from "./components/Header";
 import AirQualityPanel from "./components/AirQualityPanel";
 import MobileAirQualitySheet from "./components/MobileAirQualitySheet";
+import { CardErrorBoundary } from "./components/CardErrorBoundary";
+import OfflineBanner from "./components/OfflineBanner";
 import {
   CurrentWeatherSkeleton,
   HourlyForecastSkeleton,
@@ -172,44 +174,46 @@ function App() {
               </Suspense>
             </div>
 
-            {/* Responsive Card Grid:
-                - Desktop (xl): 3 columns:
-                  Col 1: Current Weather
-                  Col 2: Hourly Forecast (top) + Additional Info (bottom)
-                  Col 3: Daily Forecast (spans both rows)
-                - Mobile (<768px):
-                  Single column in order: current, hourly, daily, additional
-            */}
+            {/* Responsive Card Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {/* Current Weather */}
               <div className="order-1 xl:col-start-1 xl:row-start-1">
-                <Suspense fallback={<CurrentWeatherSkeleton />}>
-                  <CurrentWeather coords={coords} />
-                </Suspense>
+                <CardErrorBoundary>
+                  <Suspense fallback={<CurrentWeatherSkeleton />}>
+                    <CurrentWeather coords={coords} />
+                  </Suspense>
+                </CardErrorBoundary>
               </div>
 
               {/* Hourly Forecast */}
               <div className="order-2 xl:col-start-2 xl:row-start-1">
-                <Suspense fallback={<HourlyForecastSkeleton />}>
-                  <HourlyForecast coords={coords} />
-                </Suspense>
+                <CardErrorBoundary>
+                  <Suspense fallback={<HourlyForecastSkeleton />}>
+                    <HourlyForecast coords={coords} />
+                  </Suspense>
+                </CardErrorBoundary>
               </div>
 
               {/* Daily Forecast */}
               <div className="order-3 md:order-3 xl:order-none xl:col-start-3 xl:row-start-1 xl:row-span-2">
-                <Suspense fallback={<DailyForecastSkeleton />}>
-                  <DailyForecast coords={coords} />
-                </Suspense>
+                <CardErrorBoundary>
+                  <Suspense fallback={<DailyForecastSkeleton />}>
+                    <DailyForecast coords={coords} />
+                  </Suspense>
+                </CardErrorBoundary>
               </div>
 
               {/* Additional Weather Info */}
               <div className="order-4 md:order-4 xl:order-none xl:col-start-2 xl:row-start-2">
-                <Suspense fallback={<AdditionalInfoSkeleton />}>
-                  <AdditionalInfo coords={coords} />
-                </Suspense>
+                <CardErrorBoundary>
+                  <Suspense fallback={<AdditionalInfoSkeleton />}>
+                    <AdditionalInfo coords={coords} />
+                  </Suspense>
+                </CardErrorBoundary>
               </div>
             </div>
           </main>
+
 
           {/* Desktop Air Pollution Sidebar (>=1280px / xl) */}
           <aside
@@ -263,6 +267,9 @@ function App() {
         onClose={() => setIsMobileAirOpen(false)}
         coords={coords}
       />
+
+      {/* Offline / network connectivity banner */}
+      <OfflineBanner />
     </div>
   );
 }
