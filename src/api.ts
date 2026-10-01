@@ -1,8 +1,14 @@
 import type { z } from "zod";
 import { weatherSchema } from "./schemas/weatherSchema";
 import { GeocodeSchema, OpenMeteoGeocodeResponse } from "./schemas/geoCodeSchema";
+import {
+  airQualitySchema,
+  rawAirQualitySchema,
+  type AirQuality,
+} from "./schemas/airQualitySchema";
 
 export type Weather = z.infer<typeof weatherSchema>;
+export type { AirQuality };
 
 const BASE_URL = "https://api.open-meteo.com/v1/forecast";
 
@@ -236,3 +242,47 @@ export async function getGeocode(location: string) {
 
   return GeocodeSchema.parse(mapped);
 }
+
+const AIR_QUALITY_URL = "https://air-quality-api.open-meteo.com/v1/air-quality";
+const AIR_VARIABLES = [
+  "european_aqi",
+  "pm10",
+  "pm2_5",
+  "carbon_monoxide",
+  "nitrogen_dioxide",
+  "sulphur_dioxide",
+  "ozone",
+  "ammonia",
+];
+
+export async function getAirQuality({
+  lat,
+  lng: lon,
+}: {
+  lat: number;
+  lng: number;
+}): Promise<AirQuality> {
+  const params = new URLSearchParams({
+    latitude: String(lat),
+    longitude: String(lon),
+    current: AIR_VARIABLES.join(","),
+  });
+
+  const res = await fetch(`${AIR_QUALITY_URL}?${params}`);
+  if (!res.ok) throw new Error(`Open-Meteo air quality request failed: ${res.status}`);
+  const json = await res.json();
+  const raw = rawAirQualitySchema.parse(json);
+  const c = raw.current;
+
+  return airQualitySchema.parse({
+    aqi: c.european_aqi ?? null,
+    pm2_5: c.pm2_5 ?? null,
+    pm10: c.pm10 ?? null,
+    o3: c.ozone ?? null,
+    no2: c.nitrogen_dioxide ?? null,
+    so2: c.sulphur_dioxide ?? null,
+    co: c.carbon_monoxide ?? null,
+    nh3: c.ammonia ?? null,
+  });
+}
+
