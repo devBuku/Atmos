@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/devbuku/atmos/security/advisories/new
+    about: Please report security issues privately rather than in a public issue.
+  - name: Question or usage help
+    url: https://github.com/devbuku/atmos/discussions
+    about: Ask how to use Atmos, or how to extend it.
