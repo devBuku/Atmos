@@ -14,12 +14,6 @@ A weather and air-quality dashboard. Search for a city or click anywhere on the 
 
 **[https://atmos-devbuku.vercel.app](https://atmos-devbuku.vercel.app)**
 
-### Screenshot
-
-No screenshot has been added yet. Save a capture as
-`docs/images/screenshot.png`, then replace this paragraph with a Markdown image
-whose alt text describes what it shows.
-
 ## Features
 
 Everything below is implemented in the current codebase.
