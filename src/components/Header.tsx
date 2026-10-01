@@ -15,14 +15,14 @@ export default function Header({
   aqiValue,
 }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-30 w-full bg-background/85 backdrop-blur-md border-b border-border/60 py-3 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-[1440px] mx-auto flex items-center justify-between gap-3">
-        <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
+    <header className="sticky top-0 z-30 w-full bg-background/85 backdrop-blur-md border-b border-border/60 py-2.5 sm:py-3 px-3 sm:px-5 lg:px-8">
+      <div className="max-w-[1440px] mx-auto flex flex-wrap items-center justify-between gap-2.5 sm:gap-3">
+        <div className="flex items-center gap-2.5 sm:gap-4 min-w-0 flex-1 basis-[calc(100%-8rem)] sm:basis-auto">
           <div className="flex items-center gap-2 text-foreground font-bold tracking-tight shrink-0">
             <CloudSun className="w-6 h-6 text-sky-500" aria-hidden="true" />
             <span className="text-xl font-bold hidden sm:inline-block">Atmos</span>
           </div>
-          <div className="w-full max-w-xs sm:max-w-sm">
+          <div className="w-full max-w-none sm:max-w-sm">
             {locationSlot}
           </div>
         </div>
