@@ -244,7 +244,7 @@ coordinates are effectively static.
   layer; a typed error class would be an improvement.
 - ⚠️ There is no cache persistence, so a hard reload refetches everything.
   See the *Alternatives* note on `react-query-persist-client` in
-  ](#0008-props-for-location-context-for-theme-and-unit).
+  [0008](#0008-props-for-location-context-for-theme-and-unit).
 
 ---
 
@@ -326,7 +326,7 @@ In `App.tsx` the `<Suspense>` boundaries wrap only the four weather cards.
   alternatives were worse. It is documented so it is not "tidied up" by a
   future contributor into a uniform pattern.
 - ⚠️ Error classification is string-based (see
-  ](#0009-class-error-boundary-with-message-sniffing)).
+  [0009](#0009-class-error-boundary-with-message-sniffing)).
 
 ---
 
@@ -419,7 +419,7 @@ Air quality does not use this boundary; `AirQualityPanel` renders its own
   format in `api.ts` changes, the boundary silently degrades to "Something went
   wrong". This is the clearest candidate for future improvement: a typed
   `HttpError` carrying `status` would remove the coupling in both this boundary
-  and the retry policy in ](#0005-react-19-tanstack-query-for-all-server-state).
+  and the retry policy in [0005](#0005-react-19-tanstack-query-for-all-server-state).
 - ⚠️ The boundary does **not** call `componentDidCatch`, so errors are not
   reported anywhere. In a keyless static app there is no reporting endpoint, and
   the error UI already surfaces the problem to the user. A monitoring service
@@ -551,7 +551,7 @@ and the map is rendered once inside a `lazy()` boundary.
   contorted to serve three layouts.
 - ✅ Three renders of `AirQualityPanel` cost **one** HTTP request, because they
   share one `useAirQuality` cache entry. This is the clearest justification in
-  the codebase for the rule in ](#0005-react-19-tanstack-query-for-all-server-state).
+  the codebase for the rule in [0005](#0005-react-19-tanstack-query-for-all-server-state).
 - ⚠️ Three mounts means three instances of any state the panel owns. The panel
   holds none, so this is currently free.
 - ⚠️ The layout logic is expressed as a dense set of Tailwind utilities in
@@ -622,8 +622,11 @@ dark-mode implementations.
 
 Tailwind v4 activates dark mode through
 `@custom-variant dark (&:is(.dark *))`, so the class placement is load-bearing.
-`Map.tsx` reads `useTheme()` to swap between CARTO light and dark tiles, so the
-basemap follows the theme too.
+The map follows the theme in CSS rather than in React: OpenStreetMap publishes a
+single tile style, so `.dark .leaflet-tile-pane` in `src/index.css` applies an
+`invert()`/`hue-rotate()` filter to the tile layer, and a paired rule restyles the
+attribution control. `Map.tsx` therefore does not read `useTheme()` — see
+[0015[0015](#0015-osm-standard-tiles-with-a-css-filtered-dark-variant).
 
 **Alternatives considered.**
 
@@ -652,27 +655,100 @@ basemap follows the theme too.
 
 | # | Decision | Status |
 | --- | --- | --- |
-| ](#0001-single-external-data-provider-open-meteo) | Open-Meteo as sole provider, no API key | Accepted |
-| ](#0002-no-api-key-based-unit-selection-fetch-celsius-convert-at-render) | Fetch Celsius, convert at render, °C default | Accepted |
-| ](#0003-zod-at-the-network-boundary-and-as-the-type-source) | Zod at the boundary and as the type source | Accepted |
-| ](#0004-internal-responses-use-an-openweather-one-callstyle-shape) | OpenWeather One Call–style internal shape | Accepted |
-| ](#0005-react-19-tanstack-query-for-all-server-state) | React 19 + TanStack Query for server state | Accepted |
-| ](#0006-coordinates-rounded-before-the-cache-key-is-built) | Round coordinates before building the cache key | Accepted |
-| ](#0007-two-different-loading-strategies-suspense-for-weather-branching-for-air-quality) | Suspense for weather, branching for air quality | Accepted |
-| ](#0008-props-for-location-context-for-theme-and-unit) | Props for location, Context for theme and unit | Accepted |
-| ](#0009-class-error-boundary-with-message-sniffing) | Class error boundary with message classification | Accepted |
-| ](#0010-map-wmo-codes-directly-to-icon-font-glyphs) | Map WMO codes to Weather Icons glyphs | Accepted |
-| ](#0011-air-quality-uses-european-aqi-and-null-means-no-data) | European AQI; `null` renders as "No data" | Accepted |
-| ](#0012-dashboard-layout-card-grid-one-component-per-breakpoint-for-air-quality) | Card-grid dashboard, per-breakpoint air-quality containers | Accepted |
-| ](#0013-static-spa-deployment) | Static SPA, zero-config on Vercel, no router | Accepted |
-| ](#0014-theme-applied-before-first-paint) | Theme applied pre-paint to avoid FOUC | Accepted |
+| [0001](#0001-single-external-data-provider-open-meteo) | Open-Meteo as sole provider, no API key | Accepted |
+| [0002](#0002-no-api-key-based-unit-selection-fetch-celsius-convert-at-render) | Fetch Celsius, convert at render, °C default | Accepted |
+| [0003](#0003-zod-at-the-network-boundary-and-as-the-type-source) | Zod at the boundary and as the type source | Accepted |
+| [0004](#0004-internal-responses-use-an-openweather-one-callstyle-shape) | OpenWeather One Call–style internal shape | Accepted |
+| [0005](#0005-react-19-tanstack-query-for-all-server-state) | React 19 + TanStack Query for server state | Accepted |
+| [0006](#0006-coordinates-rounded-before-the-cache-key-is-built) | Round coordinates before building the cache key | Accepted |
+| [0007](#0007-two-different-loading-strategies-suspense-for-weather-branching-for-air-quality) | Suspense for weather, branching for air quality | Accepted |
+| [0008](#0008-props-for-location-context-for-theme-and-unit) | Props for location, Context for theme and unit | Accepted |
+| [0009](#0009-class-error-boundary-with-message-sniffing) | Class error boundary with message classification | Accepted |
+| [0010](#0010-map-wmo-codes-directly-to-icon-font-glyphs) | Map WMO codes to Weather Icons glyphs | Accepted |
+| [0011](#0011-air-quality-uses-european-aqi-and-null-means-no-data) | European AQI; `null` renders as "No data" | Accepted |
+| [0012](#0012-dashboard-layout-card-grid-one-component-per-breakpoint-for-air-quality) | Card-grid dashboard, per-breakpoint air-quality containers | Accepted |
+| [0013](#0013-static-spa-deployment) | Static SPA, zero-config on Vercel, no router | Accepted |
+| [0014](#0014-theme-applied-before-first-paint) | Theme applied pre-paint to avoid FOUC | Accepted |
+| [0015](#0015-osm-standard-tiles-with-a-css-filtered-dark-variant) | OSM standard tiles, CSS-filtered dark variant | Accepted |
+
+---
+
+## 0015. OSM standard tiles with a CSS-filtered dark variant
+
+**Status:** Accepted
+
+**Context.** The basemap originally used CARTO's legacy keyless raster basemaps
+(`basemaps.cartocdn.com/{light,dark}_all`), which shipped a genuine light and a
+genuine dark style. The motivation for moving away was the belief that CARTO
+requires an API key.
+
+That premise is only partly right, and it is worth recording precisely: the
+`basemaps.cartocdn.com` endpoint Atmos was calling is CARTO's **legacy keyless
+basemap** and needs no key. It is CARTO's newer basemap **API** that requires
+one. So this switch was not made to escape a key requirement -- none applied. It
+was made to remove a third-party basemap vendor and render tiles straight from
+the canonical OpenStreetMap source.
+
+**Decision.** Request tiles from the OpenStreetMap standard server at
+`https://tile.openstreetmap.org/{z}/{x}/{y}.png`, with no API key and no account.
+
+OSM publishes **one** tile style. To keep the map legible in dark mode,
+`.dark .leaflet-tile-pane` in `src/index.css` applies:
+
+```css
+filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.88) saturate(0.75);
+```
+
+`hue-rotate(180deg)` restores the original hue relationships after `invert()`,
+which flips every channel. A paired rule restyles the Leaflet attribution
+control so its text stays readable against the darkened tiles.
+
+Because theming is now purely CSS, `Map.tsx` no longer imports `useTheme`.
+
+**Alternatives considered.**
+
+- *Keep CARTO.* Would have kept a purpose-designed dark basemap, at the cost of
+  depending on a vendor that may re-key or withdraw access.
+- *A keyless third-party dark provider.* Rejected: the widely used ones
+  (MapTiler, Stadia, Thunderforest) all require signup and an API key, which is
+  the exact thing this project is trying to avoid. OSM's own servers are the
+  only genuinely keyless option.
+- *Vector tiles (MapLibre GL).* Rejected as disproportionate: it needs a style
+  JSON, a glyph set, and a vector tile endpoint -- reintroducing the key problem
+  this change was meant to solve.
+- *Self-hosted tiles.* Rejected: operationally significant for a small
+  volunteer-run project.
+
+**Consequences.**
+
+- No tile vendor other than OpenStreetMap, and no basemap API key.
+- The map honours dark mode with no React involvement.
+- The dark map is a **filtered** raster, not a designed dark style. Roads and
+  labels invert correctly, but the palette will not match a purpose-made dark
+  basemap. This is a deliberate, documented trade-off.
+- **Subject to the [OSM Tile Usage Policy](https://operations.osmfoundation.org/policies/tiles/):**
+  - The canonical `tile.openstreetmap.org` host is required, so Leaflet's
+    `subdomains` prop is **not** set -- `{s}` would otherwise be requested
+    literally.
+  - The `{r}` retina placeholder is **not** used; OSM serves no `@2x` variant,
+    so tiles are not retina-sharp on high-DPI displays.
+  - No bulk downloading, prefetching, or offline tile downloads. The app has no
+    service worker and no tile prefetching, so it complies today.
+  - No restrictive `Referrer-Policy`, so the `Referer` header reaches OSM.
+    `index.html` sets none, and this must stay that way.
+  - Availability is best-effort with **no SLA**; access may be withdrawn without
+    notice. If traffic grows, migrate to a hosted provider or self-hosted tiles.
+- Attribution must stay visible in the Leaflet attribution control; the policy
+  explicitly forbids hiding it behind a toggle or off-screen.
+
+---
 
 ## Known open questions
 
 1. **Typed HTTP errors.** Both the retry policy and the error boundary inspect
    `error.message` strings for status codes and error kinds. A typed
-   `HttpError` class would remove this coupling from ](#0005-react-19-tanstack-query-for-all-server-state)
-   and ](#0009-class-error-boundary-with-message-sniffing).
+   `HttpError` class would remove this coupling from [0005](#0005-react-19-tanstack-query-for-all-server-state)
+   and [0009](#0009-class-error-boundary-with-message-sniffing).
 2. **`react-leaflet` release candidate.** Pinned to `5.0.0-rc.2` under
    Hippocratic-2.1 rather than a permissive license. A stable 5.x or 4.x should
    be evaluated before the project grows.

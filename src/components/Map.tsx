@@ -10,13 +10,14 @@ import { useEffect, useMemo } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { Coords } from "../types";
-import { useTheme } from "../context/themeContext";
 
 type Props = {
   coords: Coords;
   onMapClick: (lat: number, lng: number) => void;
   locationName?: string;
 };
+
+const TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 
 const createMarkerIcon = () =>
   L.divIcon({
@@ -33,15 +34,9 @@ const createMarkerIcon = () =>
   });
 
 function Map({ coords, onMapClick, locationName }: Props) {
-  const { theme } = useTheme();
   const { lat, lng } = coords;
 
   const markerIcon = useMemo(() => createMarkerIcon(), []);
-
-  const tileUrl =
-    theme === "light"
-      ? "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-      : "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
 
   return (
     <div className="relative w-full h-[260px] sm:h-[320px] lg:h-[350px] rounded-xl overflow-hidden shadow-md border border-border/60">
@@ -53,9 +48,8 @@ function Map({ coords, onMapClick, locationName }: Props) {
       >
         <MapController coords={coords} onMapClick={onMapClick} />
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a>'
-          url={tileUrl}
-          subdomains="abcd"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors'
+          url={TILE_URL}
           maxZoom={19}
         />
         <Marker position={[lat, lng]} icon={markerIcon}>

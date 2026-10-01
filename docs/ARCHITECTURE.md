@@ -92,7 +92,7 @@ flowchart TD
     end
 
     OM[("Open-Meteo<br/>forecast · geocoding · air-quality")]
-    Tiles[("CARTO / OSM tiles")]
+    Tiles[("OpenStreetMap tiles")]
 
     User --> Combobox
     User --> Map

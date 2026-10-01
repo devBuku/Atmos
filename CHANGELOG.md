@@ -24,7 +24,7 @@ Initial public release.
 - **Map**
   - Leaflet map with a click-to-select location interaction, debounced at
     150 ms and snapped to 4 decimal places.
-  - CARTO light and dark basemaps that follow the active theme.
+  - OpenStreetMap standard raster tiles, with a CSS-filtered dark variant.
   - Animated `flyTo` transitions that preserve the user's zoom level.
   - Accessible custom marker with a pulsing indicator.
   - Lazy-loaded as a separate chunk so Leaflet stays out of the main bundle.
@@ -63,8 +63,8 @@ Initial public release.
 
 - Requires no API key, environment variables or backend.
 - Weather Icons by Erik Flowers is vendored under `src/assets/weather-icons/`.
-- Map data © OpenStreetMap contributors (ODbL); basemap tiles © CARTO;
-  weather and air-quality data by Open-Meteo (CC BY 4.0).
+- Map data and tiles © OpenStreetMap contributors (ODbL); weather and
+  air-quality data by Open-Meteo (CC BY 4.0).
 
 [Unreleased]: https://github.com/devbuku/atmos/compare/v0.0.0...HEAD
 [0.0.0]: https://github.com/devbuku/atmos/releases/tag/v0.0.0

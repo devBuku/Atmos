@@ -227,6 +227,20 @@
   animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+.dark .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.88)
+    saturate(0.75);
+}
+
+.dark .leaflet-control-attribution {
+  background: rgba(9, 9, 11, 0.75);
+  color: var(--muted-foreground);
+}
+
+.dark .leaflet-control-attribution a {
+  color: var(--foreground);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,

@@ -25,7 +25,7 @@ whose alt text describes what it shows.
 Everything below is implemented in the current codebase.
 
 - **Search any location** — debounced (250 ms) city/region/country search against the Open-Meteo geocoding API, with full keyboard support (arrow keys, Enter, Escape) and a proper combobox/listbox ARIA pattern.
-- **Click-to-load map** — a Leaflet map with CARTO light/dark basemaps that matches the active theme; click anywhere to load that point's forecast. Clicks are debounced (150 ms) and coordinates are snapped to 4 decimal places.
+- **Click-to-load map** — a Leaflet map with standard OpenStreetMap tiles, click anywhere to load that point's forecast. Clicks are debounced (150 ms) and coordinates are snapped to 4 decimal places.
 - **Smooth map transitions** — the map flies to new coordinates instead of jumping, while keeping your zoom level.
 - **Use my location** — one-click browser geolocation.
 - **Shareable URLs** — the selected location is written to `?lat=&lon=&name=`, so a link restores the exact view. It is also remembered in `localStorage` and falls back to Tokyo on first visit.
@@ -79,7 +79,7 @@ All data comes from **[Open-Meteo](https://open-meteo.com)**, which requires
 | `geocoding-api.open-meteo.com/v1/search` | Turning a typed place name into coordinates. |
 | `air-quality-api.open-meteo.com/v1/air-quality` | European AQI and pollutant concentrations. |
 
-Map tiles come from CARTO, rendered on OpenStreetMap data.
+Map tiles come from the OpenStreetMap standard tile servers. No API key or account is required for either the tiles or the weather data.
 
 ### How data flows
 
@@ -237,7 +237,8 @@ Netlify, Cloudflare Pages, S3 + CloudFront, nginx). Two things to configure:
 
 Deliberately absent from the current code:
 
-- **No weather overlay on the map.** The basemap is a plain CARTO tile layer; there is no precipitation, cloud or temperature overlay.
+- **No weather overlay on the map.** The basemap is a plain OpenStreetMap tile layer; there is no precipitation, cloud or temperature overlay.
+- **Dark mode inverts the map tiles.** OSM serves a single light style, so `.dark` applies a CSS `invert()`/`hue-rotate()` filter to `.leaflet-tile-pane`. Labels stay legible but the palette is not a purpose-designed dark basemap.
 - **Air quality is current-conditions only.** `src/api.ts` requests only the `current` block from the air-quality endpoint, so there is no AQI forecast or history chart.
 - **AQI is European, not US EPA.** The headline number is Open-Meteo's `european_aqi` with WHO µg/m³ thresholds. It is not comparable to a US EPA AQI reading without conversion.
 - **No automated tests and no CI.** Verification is `npm run lint` plus `npm run build`.
@@ -266,7 +267,7 @@ Released under the [MIT License](LICENSE). © 2026 Shubhayan Bagchi
 
 - **[Open-Meteo](https://open-meteo.com)** — all weather, geocoding and air-quality data. Free, keyless, and licensed under **CC BY 4.0**. Attribution is displayed in the app footer. Thank you to the Open-Meteo team for making this data freely accessible.
 - **[OpenStreetMap contributors](https://www.openstreetmap.org/copyright)** — map data, © OpenStreetMap contributors, licensed under the **Open Database License (ODbL)**. Attribution is rendered in the map's tile attribution control and in the app footer.
-- **[CARTO](https://carto.com/basemaps)** — CARTO light and dark basemap tiles, © CARTO, attribution shown on the map.
+- **[OpenStreetMap standard tile servers](https://operations.osmfoundation.org/policies/tiles/)** — raster basemap tiles from `tile.openstreetmap.org`, funded by donations and sponsorship. Attribution is shown in the map's attribution control. Use is subject to the OSM [Tile Usage Policy](https://operations.osmfoundation.org/policies/tiles/), which prohibits bulk downloading and offline tile prefetch.
 
 ### Icons and fonts
 

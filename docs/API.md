@@ -247,9 +247,25 @@ Not an HTTP API Atmos calls directly, but part of the network contract:
 
 | Provider | URL template | Terms |
 | --- | --- | --- |
-| CARTO (dark) | `https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png` | CARTO Basemap ToU; © CARTO / © OpenStreetMap contributors |
-| CARTO (light) | `https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png` | as above |
+| OpenStreetMap | `https://tile.openstreetmap.org/{z}/{x}/{y}.png` | [OSM Tile Usage Policy](https://operations.osmfoundation.org/policies/tiles/); map data © OpenStreetMap contributors, ODbL |
 
-Subdomains `a`–`d`, `maxZoom` 19. The theme is chosen by
-`useTheme()` inside `Map.tsx`. Attribution for both CARTO and OpenStreetMap is
-rendered in the Leaflet attribution control.
+`maxZoom` 19. No API key and no account are required.
+
+Two details are load-bearing and easy to get wrong:
+
+- **No `{s}` subdomain placeholder.** The OSM Tile Usage Policy requires exactly
+  the canonical host `tile.openstreetmap.org`. Leaflet's `subdomains` prop is
+  therefore not set — the `{s}` token would be sent literally.
+- **No `{r}` retina placeholder.** OSM serves no `@2x` variant, so Leaflet
+  substitutes it with an empty string. Tiles are not retina-sharp; this is a
+  rendering-quality trade-off of using the standard server.
+
+**Theme.** OSM publishes a single light style. Dark mode is produced in CSS, not
+by switching URLs: `.dark .leaflet-tile-pane` in `src/index.css` applies
+`invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.88) saturate(0.75)`.
+`Map.tsx` no longer imports `useTheme`. A paired rule restyles the attribution
+control so its text stays readable against the darkened tiles.
+
+Attribution is rendered in the Leaflet attribution control. The OSM Tile Usage
+Policy requires it to stay visible and requires that no restrictive
+`Referrer-Policy` be set — `index.html` sets none.

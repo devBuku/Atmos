@@ -31,28 +31,40 @@ satisfied by the attribution rendered in the application.
 
 ### OpenStreetMap contributors
 
-- **Used for:** the underlying map data rendered by the basemap tiles.
+- **Used for:** both the map data and the raster basemap tiles.
 - **Website:** <https://www.openstreetmap.org/copyright>
 - **License:** map data is © OpenStreetMap contributors, available under the
   **Open Database License (ODbL)**.
 - **Attribution requirement:** "© OpenStreetMap contributors". Satisfied in the
-  Leaflet tile attribution control, in the application footer, and in
-  `public/manifest.json` attribution fields.
+  Leaflet tile attribution control and in the application footer. Do not hide the
+  attribution beneath UI, behind a toggle, or off-screen.
+- **Tile servers:** Atmos requests tiles from `tile.openstreetmap.org` (see
+  below), so the OSM **Tile Usage Policy** applies directly.
 
-> Atmos does **not** request tiles from OpenStreetMap's own tile servers — it
-> uses CARTO's basemap tiles (below), which render OSM data. Only CARTO's tile
-> usage terms are therefore directly engaged.
+### OpenStreetMap tile servers
 
-### CARTO
-
-- **Used for:** the light and dark basemap raster tiles
-  (`basemaps.cartocdn.com`).
-- **Website:** <https://carto.com/basemaps>
-- **License / terms:** subject to CARTO's
-  [Basemap Terms of Use](https://carto.com/basemap/terms-of-use/). Basemap
-  cartography is © CARTO; the underlying data is © OpenStreetMap contributors.
-- **Attribution requirement:** attribution to CARTO. Satisfied in the Leaflet
-  tile attribution control.
+- **Used for:** the raster basemap tiles at
+  `https://tile.openstreetmap.org/{z}/{x}/{y}.png`.
+- **Terms:** the
+  [OSM Tile Usage Policy](https://operations.osmfoundation.org/policies/tiles/).
+  These servers are funded by donations and sponsorship and are **not** an SLA —
+  access may be withdrawn without notice.
+- **Requirements, and how they are met:**
+  - Use exactly the canonical URL above, with HTTPS — done; no `{s}` subdomain
+    placeholder, and no `{r}` retina placeholder (OSM serves no `@2x` variant).
+  - Show visible licence attribution on the map — done, in the Leaflet
+    attribution control.
+  - Do not set a restrictive `Referrer-Policy` — `index.html` sets none, so the
+    browser's default `Referer` header is sent end to end.
+  - Do not send `no-cache` headers — nothing in this app does.
+  - Do not bulk download, prefetch, or offer offline tile downloads — nothing in
+    this app does. There is no service worker and no tile prefetching.
+- **Recommendation from the policy:** publish a contact email so operators can
+  reach you. This project's address is in [`SECURITY.md`](SECURITY.md).
+- **If traffic grows:** this server is intended for modest use. A heavily used
+  deployment should move to a hosted provider or self-hosted tiles — see the
+  [raster tile provider list](https://wiki.openstreetmap.org/wiki/Raster_tile_providers)
+  or [switch2osm.org](https://switch2osm.org/).
 
 ---
 
