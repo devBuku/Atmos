@@ -1,11 +1,13 @@
-import { Suspense, useState } from "react";
+import { Suspense, useState, useRef, useCallback } from "react";
 import AdditionalInfo from "./components/cards/AdditionalInfo";
 import CurrentWeather from "./components/cards/CurrentWeather";
 import DailyForecast from "./components/cards/DailyForecast";
 import HourlyForecast from "./components/cards/HourlyForecast";
 import Map from "./components/Map";
 import type { Coords } from "./types";
-import LocationDropdown from "./components/dropdowns/LocationDropdown";
+import LocationCombobox, {
+  type LocationSelection,
+} from "./components/LocationCombobox";
 import Header from "./components/Header";
 import AirQualityPanel from "./components/AirQualityPanel";
 import MobileAirQualitySheet from "./components/MobileAirQualitySheet";
@@ -15,46 +17,127 @@ import {
   DailyForecastSkeleton,
   AdditionalInfoSkeleton,
 } from "./components/cards/Skeletons";
-import { useQuery } from "@tanstack/react-query";
-import { getGeocode } from "./api";
 import { useAirQuality } from "./hooks/useAirQuality";
 
+interface LocationState {
+  name: string;
+  lat: number;
+  lng: number;
+}
+
+const DEFAULT_LOCATION: LocationState = {
+  name: "Tokyo, Japan",
+  lat: 35.6895,
+  lng: 139.6917,
+};
+
+function getInitialLocation(): LocationState {
+  if (typeof window !== "undefined") {
+    // 1. Check URL query params
+    const params = new URLSearchParams(window.location.search);
+    const latParam = params.get("lat");
+    const lonParam = params.get("lon") ?? params.get("lng");
+    const nameParam = params.get("name");
+
+    if (latParam && lonParam) {
+      const lat = parseFloat(latParam);
+      const lng = parseFloat(lonParam);
+      if (!isNaN(lat) && !isNaN(lng)) {
+        return {
+          name: nameParam
+            ? decodeURIComponent(nameParam)
+            : `Custom location (${lat.toFixed(2)}, ${lng.toFixed(2)})`,
+          lat,
+          lng,
+        };
+      }
+    }
+
+    // 2. Check localStorage
+    try {
+      const saved = localStorage.getItem("atmos_last_location");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (
+          typeof parsed.lat === "number" &&
+          typeof parsed.lng === "number" &&
+          typeof parsed.name === "string"
+        ) {
+          return parsed;
+        }
+      }
+    } catch {
+      // Ignore
+    }
+  }
+
+  return DEFAULT_LOCATION;
+}
+
 function App() {
-  const [location, setLocation] = useState("Tokyo");
-  const [mapCoords, setMapCoords] = useState<Coords | null>(null);
+  const [location, setLocation] = useState<LocationState>(getInitialLocation);
   const [isMobileAirOpen, setIsMobileAirOpen] = useState(false);
+  const mapClickTimerRef = useRef<number | null>(null);
 
-  const { data: geoCodeData } = useQuery({
-    queryKey: ["geocode", location],
-    queryFn: () => getGeocode(location),
-    placeholderData: (previous) => previous,
-  });
-
-  const handleMapClick = (lat: number, lng: number) => {
-    setMapCoords({ lat, lng });
-  };
-
-  const handleLocationChange = (city: string) => {
-    setLocation(city);
-    setMapCoords(null);
-  };
-
-  const geocoded = geoCodeData?.[0];
-  const coords: Coords =
-    mapCoords ??
-    (geocoded
-      ? { lat: geocoded.lat, lng: geocoded.lon }
-      : { lat: 10, lng: 10 });
-
+  const coords: Coords = { lat: location.lat, lng: location.lng };
   const { data: airData } = useAirQuality(coords);
+
+  const updateLocation = useCallback((newLoc: LocationState) => {
+    setLocation(newLoc);
+
+    // Persist to localStorage and sync URL query parameters
+    try {
+      localStorage.setItem("atmos_last_location", JSON.stringify(newLoc));
+      const url = new URL(window.location.href);
+      url.searchParams.set("lat", newLoc.lat.toFixed(4));
+      url.searchParams.set("lon", newLoc.lng.toFixed(4));
+      url.searchParams.set("name", newLoc.name);
+      window.history.replaceState(null, "", url.toString());
+    } catch {
+      // Ignore
+    }
+  }, []);
+
+  const handleSelectLocation = useCallback(
+    (loc: LocationSelection) => {
+      updateLocation({
+        name: loc.name,
+        lat: loc.lat,
+        lng: loc.lng,
+      });
+    },
+    [updateLocation],
+  );
+
+  const handleMapClick = useCallback(
+    (lat: number, lng: number) => {
+      // Debounce rapid map clicks
+      if (mapClickTimerRef.current) {
+        window.clearTimeout(mapClickTimerRef.current);
+      }
+
+      mapClickTimerRef.current = window.setTimeout(() => {
+        const roundedLat = Math.round(lat * 10000) / 10000;
+        const roundedLng = Math.round(lng * 10000) / 10000;
+        const name = `Custom location (${roundedLat.toFixed(2)}, ${roundedLng.toFixed(2)})`;
+
+        updateLocation({
+          name,
+          lat: roundedLat,
+          lng: roundedLng,
+        });
+      }, 150);
+    },
+    [updateLocation],
+  );
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Header
         locationSlot={
-          <LocationDropdown
-            location={location}
-            onLocationChange={handleLocationChange}
+          <LocationCombobox
+            currentLocationName={location.name}
+            onSelectLocation={handleSelectLocation}
           />
         }
         onOpenMobileAirQuality={() => setIsMobileAirOpen(true)}
@@ -65,7 +148,7 @@ function App() {
         <div className="flex flex-col xl:flex-row gap-6 items-start">
           {/* Main Column */}
           <main className="flex-1 w-full min-w-0 flex flex-col gap-6">
-            {/* Map (outside Suspense deliberately) */}
+            {/* Map (outside Suspense deliberately to preserve zoom/pan state) */}
             <div className="w-full">
               <Map coords={coords} onMapClick={handleMapClick} />
             </div>
