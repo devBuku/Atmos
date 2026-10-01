@@ -159,8 +159,8 @@ function App() {
         aqiValue={airData?.aqi}
       />
 
-      <div className="flex-1 w-full max-w-[1440px] mx-auto p-4 sm:p-6 lg:p-8 flex flex-col gap-6">
-        <div className="flex flex-col xl:flex-row gap-6 items-start">
+      <div className="flex-1 w-full max-w-[1440px] mx-auto px-3 py-4 sm:px-5 sm:py-6 lg:px-8 lg:py-8 flex flex-col gap-5 sm:gap-6">
+        <div className="flex flex-col xl:flex-row gap-5 sm:gap-6 items-stretch">
           {/* Main Column */}
           <main className="flex-1 w-full min-w-0 flex flex-col gap-6">
             {/* Map (outside weather Suspense deliberately to preserve zoom/pan state) */}
@@ -175,7 +175,7 @@ function App() {
             </div>
 
             {/* Responsive Card Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 xl:gap-6">
               {/* Current Weather */}
               <div className="order-1 xl:col-start-1 xl:row-start-1">
                 <CardErrorBoundary>
@@ -186,7 +186,7 @@ function App() {
               </div>
 
               {/* Hourly Forecast */}
-              <div className="order-2 xl:col-start-2 xl:row-start-1">
+              <div className="order-2 xl:col-start-1 xl:row-start-2">
                 <CardErrorBoundary>
                   <Suspense fallback={<HourlyForecastSkeleton />}>
                     <HourlyForecast coords={coords} />
@@ -195,7 +195,7 @@ function App() {
               </div>
 
               {/* Daily Forecast */}
-              <div className="order-3 md:order-3 xl:order-none xl:col-start-3 xl:row-start-1 xl:row-span-2">
+              <div className="order-3 md:order-3 xl:order-none xl:col-start-2 xl:row-start-1 xl:row-span-2">
                 <CardErrorBoundary>
                   <Suspense fallback={<DailyForecastSkeleton />}>
                     <DailyForecast coords={coords} />
@@ -204,7 +204,7 @@ function App() {
               </div>
 
               {/* Additional Weather Info */}
-              <div className="order-4 md:order-4 xl:order-none xl:col-start-2 xl:row-start-2">
+              <div className="order-4 md:order-4 xl:order-none xl:col-start-1 xl:row-start-3">
                 <CardErrorBoundary>
                   <Suspense fallback={<AdditionalInfoSkeleton />}>
                     <AdditionalInfo coords={coords} />
@@ -217,7 +217,7 @@ function App() {
 
           {/* Desktop Air Pollution Sidebar (>=1280px / xl) */}
           <aside
-            className="hidden xl:block w-[300px] shrink-0 sticky top-20"
+            className="hidden xl:block w-[280px] 2xl:w-[300px] shrink-0 sticky top-20 self-start"
             aria-label="Air pollution panel"
           >
             <AirQualityPanel coords={coords} />

@@ -46,7 +46,7 @@ function Map({ coords, onMapClick, locationName }: Props) {
       : "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
 
   return (
-    <div className="relative w-full h-[350px] rounded-xl overflow-hidden shadow-md border border-border/60">
+    <div className="relative w-full h-[260px] sm:h-[320px] lg:h-[350px] rounded-xl overflow-hidden shadow-md border border-border/60">
       <MapContainer
         center={[lat, lng]}
         zoom={5}
