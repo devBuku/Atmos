@@ -21,7 +21,7 @@ function Map({ coords, onMapClick }: Props) {
     <MapContainer
       center={[lat, lng]}
       zoom={5}
-      className="relative z-0 h-125 w-full"
+      className="relative z-0 h-[350px] w-full rounded-xl overflow-hidden shadow-md border border-border/60"
     >
       <MapController coords={coords} onMapClick={onMapClick} />
       <TileLayer

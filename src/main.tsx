@@ -7,6 +7,8 @@ import {
   QueryClientProvider,
   keepPreviousData,
 } from "@tanstack/react-query";
+import { ThemeProvider } from "./context/ThemeProvider.tsx";
+import { UnitProvider } from "./context/UnitContext.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,7 +33,11 @@ const queryClient = new QueryClient({
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <App />
+      <ThemeProvider>
+        <UnitProvider>
+          <App />
+        </UnitProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   </StrictMode>,
 );
