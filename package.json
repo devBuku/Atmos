@@ -3,6 +3,32 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "description": "A keyless weather and air-quality dashboard built on Open-Meteo, with a clickable Leaflet map, light/dark themes and no API key required.",
+  "license": "MIT",
+  "author": "Shubhayan Bagchi",
+  "homepage": "https://github.com/devbuku/atmos#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devbuku/atmos.git"
+  },
+  "bugs": {
+    "url": "https://github.com/devbuku/atmos/issues"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  },
+  "keywords": [
+    "weather",
+    "air-quality",
+    "forecast",
+    "open-meteo",
+    "dashboard",
+    "leaflet",
+    "react",
+    "vite",
+    "tailwindcss",
+    "tanstack-query"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
