@@ -1,9 +1,8 @@
-import { Suspense, useState, useRef, useCallback } from "react";
+import { Suspense, useState, useRef, useCallback, lazy } from "react";
 import AdditionalInfo from "./components/cards/AdditionalInfo";
 import CurrentWeather from "./components/cards/CurrentWeather";
 import DailyForecast from "./components/cards/DailyForecast";
 import HourlyForecast from "./components/cards/HourlyForecast";
-import Map from "./components/Map";
 import type { Coords } from "./types";
 import LocationCombobox, {
   type LocationSelection,
@@ -18,6 +17,20 @@ import {
   AdditionalInfoSkeleton,
 } from "./components/cards/Skeletons";
 import { useAirQuality } from "./hooks/useAirQuality";
+
+const Map = lazy(() => import("./components/Map"));
+
+function MapPlaceholder() {
+  return (
+    <div
+      className="w-full h-[350px] rounded-xl bg-card border border-border/60 shadow-md flex flex-col items-center justify-center gap-2 animate-pulse text-muted-foreground"
+      aria-label="Loading interactive map"
+    >
+      <div className="w-8 h-8 rounded-full border-2 border-sky-400 border-t-transparent animate-spin" />
+      <span className="text-xs font-medium">Loading interactive map...</span>
+    </div>
+  );
+}
 
 interface LocationState {
   name: string;
@@ -148,9 +161,15 @@ function App() {
         <div className="flex flex-col xl:flex-row gap-6 items-start">
           {/* Main Column */}
           <main className="flex-1 w-full min-w-0 flex flex-col gap-6">
-            {/* Map (outside Suspense deliberately to preserve zoom/pan state) */}
+            {/* Map (outside weather Suspense deliberately to preserve zoom/pan state) */}
             <div className="w-full">
-              <Map coords={coords} onMapClick={handleMapClick} />
+              <Suspense fallback={<MapPlaceholder />}>
+                <Map
+                  coords={coords}
+                  onMapClick={handleMapClick}
+                  locationName={location.name}
+                />
+              </Suspense>
             </div>
 
             {/* Responsive Card Grid:
