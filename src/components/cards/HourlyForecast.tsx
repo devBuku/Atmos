@@ -67,7 +67,6 @@ function HourlyForecast({ coords }: Props) {
                 {formatTemp(hour.temp, unit)}
               </span>
 
-              {/* Precipitation probability */}
               <div className="h-4 flex items-center justify-center">
                 {popPercent > 0 ? (
                   <span

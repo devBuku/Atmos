@@ -77,7 +77,6 @@ export default function AirQualityPanel({
       aria-label="Air Pollution"
       className={`p-5 rounded-xl bg-card border border-border/60 shadow-md flex flex-col gap-4 text-foreground transition-all duration-200 ${className}`}
     >
-      {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-bold tracking-tight flex items-center gap-2 text-foreground">
           <Wind className="w-5 h-5 text-sky-400" aria-hidden="true" />
@@ -88,7 +87,6 @@ export default function AirQualityPanel({
         </span>
       </div>
 
-      {/* Main AQI Banner */}
       <div className="p-4 rounded-xl bg-gradient-to-br from-muted/60 to-muted/20 border border-border/40 flex items-center justify-between">
         <div className="flex flex-col">
           <span className="text-xs uppercase font-bold tracking-wider text-muted-foreground">
@@ -114,7 +112,6 @@ export default function AirQualityPanel({
         </div>
       </div>
 
-      {/* Pollutant Cards */}
       <div
         className={
           isTabletGrid
@@ -187,7 +184,6 @@ export default function AirQualityPanel({
                 </div>
               </div>
 
-              {/* Concentration Bar */}
               <div className="w-full h-1.5 bg-muted/80 rounded-full overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-500"
@@ -209,7 +205,6 @@ export default function AirQualityPanel({
                 />
               </div>
 
-              {/* 5-Step Scale with Current Level Highlighted */}
               <div className="grid grid-cols-5 gap-1 pt-0.5" aria-hidden="true">
                 {LEVEL_NAMES.map((name, idx) => {
                   const isCurrent = idx === levelIdx;

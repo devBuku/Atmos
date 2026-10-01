@@ -56,7 +56,6 @@ const DAILY = [
   "wind_direction_10m_dominant",
 ];
 
-// WMO weather code -> [main, description, OpenWeather-style icon prefix]
 const WMO: Record<number, [string, string, string]> = {
   0: ["Clear", "clear sky", "01"],
   1: ["Clear", "mainly clear", "02"],
@@ -112,7 +111,7 @@ export async function getWeather({
     daily: DAILY.join(","),
     timezone: "auto",
     timeformat: "unixtime",
-    wind_speed_unit: "ms", // m/s, same as OpenWeather metric
+    wind_speed_unit: "ms",
     forecast_days: "8",
   });
 
@@ -129,7 +128,6 @@ export async function getWeather({
   const hourIndex = (key: string, day: number, hour: number) =>
     hv(key, day * 24 + hour);
 
-  // Index of the current hour inside the hourly arrays
   const nowHour = Math.floor(c.time / 3600) * 3600;
   const found = (h.time as number[]).indexOf(nowHour);
   const start = found === -1 ? 0 : found;
@@ -148,7 +146,7 @@ export async function getWeather({
     wind_deg: hv("wind_direction_10m", i),
     wind_gust: hv("wind_gusts_10m", i),
     weather: condition(hv("weather_code", i), hv("is_day", i) === 1),
-    pop: hv("precipitation_probability", i) / 100, // % -> 0..1
+    pop: hv("precipitation_probability", i) / 100,
   }));
 
   const daily = (d.time as number[]).map((dt, i) => {
@@ -213,7 +211,7 @@ export async function getWeather({
       wind_gust: c.wind_gusts_10m,
       weather: condition(c.weather_code, c.is_day === 1),
     },
-    hourly: hourly.slice(start, start + 48), // OpenWeather gives 48 hours from now
+    hourly: hourly.slice(start, start + 48),
     daily,
   });
 }

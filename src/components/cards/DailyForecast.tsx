@@ -18,7 +18,6 @@ const DailyForecast = ({ coords }: Props) => {
   const { data } = useWeather(coords);
   const { unit } = useUnit();
 
-  // Find min/max across the whole week to scale the range bars relative to each other
   const overallMin = Math.min(...data.daily.map((d) => d.temp.min));
   const overallMax = Math.max(...data.daily.map((d) => d.temp.max));
   const tempRange = Math.max(1, overallMax - overallMin);
@@ -38,7 +37,6 @@ const DailyForecast = ({ coords }: Props) => {
         const weather = day.weather[0];
         const popPercent = Math.round(day.pop * 100);
 
-        // Calculate range bar positioning
         const barLeft = ((day.temp.min - overallMin) / tempRange) * 100;
         const barWidth = Math.max(
           12,
@@ -50,7 +48,6 @@ const DailyForecast = ({ coords }: Props) => {
             key={day.dt}
             className="flex items-center justify-between py-2.5 px-1 hover:bg-muted/20 rounded-lg transition-colors gap-2 text-sm"
           >
-            {/* Weekday */}
             <span
               className={`w-14 font-semibold shrink-0 ${
                 isToday ? "text-sky-400 font-bold" : "text-foreground"
@@ -59,7 +56,6 @@ const DailyForecast = ({ coords }: Props) => {
               {dayLabel}
             </span>
 
-            {/* Icon + Precipitation chance */}
             <div className="flex items-center gap-1.5 w-20 shrink-0">
               <WeatherIcon
                 className="text-xl text-foreground shrink-0"
@@ -80,12 +76,10 @@ const DailyForecast = ({ coords }: Props) => {
               )}
             </div>
 
-            {/* Min Temp (WCAG AA compliant contrast) */}
             <span className="w-9 text-right font-medium text-muted-foreground tabular-nums">
               {formatTemp(day.temp.min, unit)}
             </span>
 
-            {/* Small Range Bar */}
             <div
               className="flex-1 max-w-[120px] h-2 bg-muted/70 rounded-full relative overflow-hidden mx-1.5"
               aria-hidden="true"
@@ -99,7 +93,6 @@ const DailyForecast = ({ coords }: Props) => {
               />
             </div>
 
-            {/* Max Temp */}
             <span className="w-9 text-right font-bold text-foreground tabular-nums">
               {formatTemp(day.temp.max, unit)}
             </span>

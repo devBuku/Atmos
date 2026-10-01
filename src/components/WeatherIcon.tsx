@@ -1,15 +1,13 @@
-// Weather-icons font (the `.wi-*` classes below) comes from this vendored stylesheet
 import "../assets/weather-icons/css/weather-icons.css";
 import clsx from "clsx";
 
 type Props = {
-  code: number; // WMO code from Open-Meteo (weather[0].id)
+  code: number;
   night?: boolean;
   className?: string;
   label?: string;
 };
 
-// WMO code -> [day class, night class]
 const rain: [string, string] = ["wi-day-rain", "wi-night-alt-rain"];
 const showers: [string, string] = ["wi-day-showers", "wi-night-alt-showers"];
 const sprinkle: [string, string] = ["wi-day-sprinkle", "wi-night-alt-sprinkle"];

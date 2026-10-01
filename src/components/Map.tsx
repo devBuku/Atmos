@@ -18,7 +18,6 @@ type Props = {
   locationName?: string;
 };
 
-// Create custom accessible pulse marker icon
 const createMarkerIcon = () =>
   L.divIcon({
     className: "custom-map-marker",
@@ -39,7 +38,6 @@ function Map({ coords, onMapClick, locationName }: Props) {
 
   const markerIcon = useMemo(() => createMarkerIcon(), []);
 
-  // CARTO basemap URLs
   const tileUrl =
     theme === "light"
       ? "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
@@ -96,7 +94,6 @@ function MapController({
     },
   });
 
-  // Smoothly fly to new coordinates when coords change
   useEffect(() => {
     const currentCenter = map.getCenter();
     const distance = Math.hypot(
@@ -104,7 +101,6 @@ function MapController({
       currentCenter.lng - lng,
     );
 
-    // Only fly if coordinates moved by more than a minimal threshold
     if (distance > 0.001) {
       map.flyTo([lat, lng], map.getZoom(), {
         duration: 1.2,

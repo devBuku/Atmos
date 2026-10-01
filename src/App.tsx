@@ -48,7 +48,6 @@ const DEFAULT_LOCATION: LocationState = {
 
 function getInitialLocation(): LocationState {
   if (typeof window !== "undefined") {
-    // 1. Check URL query params
     const params = new URLSearchParams(window.location.search);
     const latParam = params.get("lat");
     const lonParam = params.get("lon") ?? params.get("lng");
@@ -68,7 +67,6 @@ function getInitialLocation(): LocationState {
       }
     }
 
-    // 2. Check localStorage
     try {
       const saved = localStorage.getItem("atmos_last_location");
       if (saved) {
@@ -81,8 +79,8 @@ function getInitialLocation(): LocationState {
           return parsed;
         }
       }
-    } catch {
-      // Ignore
+    } catch (error) {
+      void error;
     }
   }
 
@@ -100,7 +98,6 @@ function App() {
   const updateLocation = useCallback((newLoc: LocationState) => {
     setLocation(newLoc);
 
-    // Persist to localStorage and sync URL query parameters
     try {
       localStorage.setItem("atmos_last_location", JSON.stringify(newLoc));
       const url = new URL(window.location.href);
@@ -108,8 +105,8 @@ function App() {
       url.searchParams.set("lon", newLoc.lng.toFixed(4));
       url.searchParams.set("name", newLoc.name);
       window.history.replaceState(null, "", url.toString());
-    } catch {
-      // Ignore
+    } catch (error) {
+      void error;
     }
   }, []);
 
@@ -126,7 +123,6 @@ function App() {
 
   const handleMapClick = useCallback(
     (lat: number, lng: number) => {
-      // Debounce rapid map clicks
       if (mapClickTimerRef.current) {
         window.clearTimeout(mapClickTimerRef.current);
       }
@@ -161,9 +157,7 @@ function App() {
 
       <div className="flex-1 w-full max-w-[1440px] mx-auto px-3 py-4 sm:px-5 sm:py-6 lg:px-8 lg:py-8 flex flex-col gap-5 sm:gap-6">
         <div className="flex flex-col xl:flex-row gap-5 sm:gap-6 items-stretch">
-          {/* Main Column */}
           <main className="flex-1 w-full min-w-0 flex flex-col gap-6">
-            {/* Map (outside weather Suspense deliberately to preserve zoom/pan state) */}
             <div className="w-full">
               <Suspense fallback={<MapPlaceholder />}>
                 <Map
@@ -174,9 +168,7 @@ function App() {
               </Suspense>
             </div>
 
-            {/* Responsive Card Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 xl:gap-6">
-              {/* Current Weather */}
               <div className="order-1 xl:col-start-1 xl:row-start-1">
                 <CardErrorBoundary>
                   <Suspense fallback={<CurrentWeatherSkeleton />}>
@@ -185,7 +177,6 @@ function App() {
                 </CardErrorBoundary>
               </div>
 
-              {/* Hourly Forecast */}
               <div className="order-2 xl:col-start-1 xl:row-start-2">
                 <CardErrorBoundary>
                   <Suspense fallback={<HourlyForecastSkeleton />}>
@@ -194,7 +185,6 @@ function App() {
                 </CardErrorBoundary>
               </div>
 
-              {/* Daily Forecast */}
               <div className="order-3 md:order-3 xl:order-none xl:col-start-2 xl:row-start-1 xl:row-span-2">
                 <CardErrorBoundary>
                   <Suspense fallback={<DailyForecastSkeleton />}>
@@ -203,7 +193,6 @@ function App() {
                 </CardErrorBoundary>
               </div>
 
-              {/* Additional Weather Info */}
               <div className="order-4 md:order-4 xl:order-none xl:col-start-1 xl:row-start-3">
                 <CardErrorBoundary>
                   <Suspense fallback={<AdditionalInfoSkeleton />}>
@@ -214,8 +203,6 @@ function App() {
             </div>
           </main>
 
-
-          {/* Desktop Air Pollution Sidebar (>=1280px / xl) */}
           <aside
             className="hidden xl:block w-[280px] 2xl:w-[300px] shrink-0 sticky top-20 self-start"
             aria-label="Air pollution panel"
@@ -224,7 +211,6 @@ function App() {
           </aside>
         </div>
 
-        {/* Tablet Air Pollution Panel (768px - 1279px) */}
         <aside
           className="hidden md:block xl:hidden w-full mt-2"
           aria-label="Air pollution panel"
@@ -232,7 +218,6 @@ function App() {
           <AirQualityPanel coords={coords} isTabletGrid={true} />
         </aside>
 
-        {/* Footer */}
         <footer className="mt-8 pt-6 border-t border-border/40 text-center text-xs text-muted-foreground flex flex-col sm:flex-row items-center justify-between gap-3">
           <p>
             Weather data by{" "}
@@ -261,14 +246,12 @@ function App() {
         </footer>
       </div>
 
-      {/* Mobile Air Quality Bottom Sheet (<768px) */}
       <MobileAirQualitySheet
         isOpen={isMobileAirOpen}
         onClose={() => setIsMobileAirOpen(false)}
         coords={coords}
       />
 
-      {/* Offline / network connectivity banner */}
       <OfflineBanner />
     </div>
   );

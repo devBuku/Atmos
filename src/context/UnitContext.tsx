@@ -18,8 +18,8 @@ export function UnitProvider({ children }: { children: ReactNode }) {
     setUnitState(newUnit);
     try {
       localStorage.setItem(STORAGE_KEY, newUnit);
-    } catch {
-      // Ignore storage errors (private mode, etc.)
+    } catch (error) {
+      void error;
     }
   };
 

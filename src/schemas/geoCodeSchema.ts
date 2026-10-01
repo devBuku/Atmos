@@ -1,6 +1,5 @@
 import { z } from "zod"
 
-// Open-Meteo's raw response shape
 export const OpenMeteoGeocodeResponse = z.object({
   results: z
     .array(
@@ -9,13 +8,12 @@ export const OpenMeteoGeocodeResponse = z.object({
         latitude: z.number(),
         longitude: z.number(),
         country: z.string().optional(),
-        admin1: z.string().optional(), // state/region
+        admin1: z.string().optional(),
       })
     )
-    .optional(), // key is absent, not [], when there are zero matches
+    .optional(),
 })
 
-// Your existing shape, kept as-is so other code doesn't need to change
 export const GeocodeSchema = z.array(
   z.object({
     name: z.string(),

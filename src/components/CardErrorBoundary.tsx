@@ -1,4 +1,4 @@
-import { Component, type ErrorInfo, type ReactNode } from "react";
+import { Component, type ReactNode } from "react";
 import { RefreshCw, WifiOff, AlertTriangle } from "lucide-react";
 
 interface Props {
@@ -69,10 +69,6 @@ export class CardErrorBoundary extends Component<Props, State> {
 
   static getDerivedStateFromError(error: Error): State {
     return { hasError: true, error };
-  }
-
-  componentDidCatch(error: Error, info: ErrorInfo) {
-    console.error("[CardErrorBoundary] Caught error:", error, info);
   }
 
   handleRetry = () => {

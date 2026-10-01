@@ -1,40 +1,23 @@
 export type TemperatureUnit = "C" | "F";
 
-/**
- * Converts Celsius to Fahrenheit.
- */
 export function celsiusToFahrenheit(c: number): number {
   return (c * 9) / 5 + 32;
 }
 
-/**
- * Converts m/s to mph.
- */
 export function msToMph(ms: number): number {
   return ms * 2.23694;
 }
 
-/**
- * Formats a temperature in Celsius or Fahrenheit with a degree symbol.
- * Example: formatTemp(21.4, 'C') -> "21°"
- */
 export function formatTemp(celsius: number, unit: TemperatureUnit): string {
   const value = unit === "C" ? celsius : celsiusToFahrenheit(celsius);
   return `${Math.round(value)}°`;
 }
 
-/**
- * Formats a temperature with the degree symbol and unit letter.
- * Example: formatTempWithUnit(21.4, 'C') -> "21°C", formatTempWithUnit(21.4, 'F') -> "71°F"
- */
 export function formatTempWithUnit(celsius: number, unit: TemperatureUnit): string {
   const value = unit === "C" ? celsius : celsiusToFahrenheit(celsius);
   return `${Math.round(value)}°${unit}`;
 }
 
-/**
- * Formats wind speed according to temperature/system unit (m/s for metric, mph for imperial).
- */
 export function formatWind(speedMs: number, unit: TemperatureUnit): string {
   if (unit === "F") {
     return `${Math.round(msToMph(speedMs))} mph`;
@@ -42,9 +25,6 @@ export function formatWind(speedMs: number, unit: TemperatureUnit): string {
   return `${Math.round(speedMs)} m/s`;
 }
 
-/**
- * Converts degrees (0-360) into compass direction (N, NE, etc.)
- */
 const COMPASS_DIRECTIONS = [
   "N",
   "NNE",
@@ -70,9 +50,6 @@ export function getWindDirection(deg: number): string {
   return COMPASS_DIRECTIONS[index];
 }
 
-/**
- * Returns UV index label and color indicator.
- */
 export function getUVInfo(uvi: number): { label: string; color: string } {
   if (uvi < 3) return { label: "Low", color: "text-emerald-400" };
   if (uvi < 6) return { label: "Moderate", color: "text-yellow-400" };
@@ -81,9 +58,6 @@ export function getUVInfo(uvi: number): { label: string; color: string } {
   return { label: "Extreme", color: "text-purple-400" };
 }
 
-/**
- * Formats a Unix timestamp (in seconds) in the given timezone.
- */
 export function formatTimeInTimezone(
   unixSeconds: number,
   timeZone: string,
@@ -105,9 +79,6 @@ export function formatTimeInTimezone(
   }
 }
 
-/**
- * Formats a short day of the week (e.g. "Mon") in the given timezone.
- */
 export function formatDayInTimezone(
   unixSeconds: number,
   timeZone: string,
@@ -117,9 +88,6 @@ export function formatDayInTimezone(
   });
 }
 
-/**
- * Checks if a timestamp represents "today" in the given timezone.
- */
 export function isTodayInTimezone(
   unixSeconds: number,
   timeZone: string,

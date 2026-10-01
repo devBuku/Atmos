@@ -41,7 +41,6 @@ export default function LocationCombobox({
     setQuery(currentLocationName);
   }
 
-  // Debounce search input by 250ms
   useEffect(() => {
     const timer = setTimeout(() => {
       const trimmed = query.trim();
@@ -50,15 +49,13 @@ export default function LocationCombobox({
     return () => clearTimeout(timer);
   }, [query]);
 
-  // Query geocoding API
   const { data: results, isLoading } = useQuery({
     queryKey: ["geocode-search", debouncedQuery],
     queryFn: () => getGeocode(debouncedQuery),
     enabled: debouncedQuery.length >= 2,
-    staleTime: 60 * 60 * 1000, // 1 hour geocode cache
+    staleTime: 60 * 60 * 1000,
   });
 
-  // Handle click outside to close dropdown
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (
@@ -87,7 +84,6 @@ export default function LocationCombobox({
     state?: string;
   }) => {
     const parts = [item.name, item.state, item.country].filter(Boolean);
-    // Avoid repeating state if it's the same as name
     const uniqueParts = parts.filter(
       (part, i, arr) => arr.indexOf(part) === i,
     );
@@ -165,7 +161,6 @@ export default function LocationCombobox({
   return (
     <div ref={containerRef} className="relative w-full">
       <div className="relative flex items-center">
-        {/* Search icon or loading spinner */}
         <div className="absolute left-3 text-muted-foreground pointer-events-none flex items-center">
           {isLoading ? (
             <Loader2 className="w-4 h-4 animate-spin text-sky-400" />
@@ -174,7 +169,6 @@ export default function LocationCombobox({
           )}
         </div>
 
-        {/* Input */}
         <input
           ref={inputRef}
           type="text"
@@ -195,7 +189,6 @@ export default function LocationCombobox({
           className="w-full pl-9 pr-20 py-2 text-sm bg-card/80 border border-border rounded-xl text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-all min-h-[44px]"
         />
 
-        {/* Right action buttons: Clear + Use Location */}
         <div className="absolute right-1 flex items-center gap-1">
           {query && (
             <button
@@ -230,14 +223,12 @@ export default function LocationCombobox({
         </div>
       </div>
 
-      {/* Geolocation error notification */}
       {geoError && (
         <div className="absolute left-0 right-0 top-full mt-1 p-2 bg-destructive/15 border border-destructive/30 text-destructive text-xs rounded-lg z-50">
           {geoError}
         </div>
       )}
 
-      {/* Dropdown Results */}
       {isOpen && debouncedQuery.length >= 2 && (
         <ul
           id="location-options-list"

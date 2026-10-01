@@ -13,11 +13,10 @@ import { UnitProvider } from "./context/UnitContext.tsx";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 10 * 60 * 1000, // 10 minutes
-      gcTime: 30 * 60 * 1000, // 30 minutes
+      staleTime: 10 * 60 * 1000,
+      gcTime: 30 * 60 * 1000,
       refetchOnWindowFocus: true,
       retry: (failureCount, error) => {
-        // Never retry 4xx errors (client errors: 400, 404, 429, etc.)
         if (error instanceof Error) {
           const statusMatch = error.message.match(/\b(4\d\d)\b/);
           if (statusMatch) return false;

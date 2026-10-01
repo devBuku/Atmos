@@ -28,8 +28,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }
     try {
       localStorage.setItem(STORAGE_KEY, theme);
-    } catch {
-      // Ignore storage errors
+    } catch (error) {
+      void error;
     }
   }, [theme]);
 

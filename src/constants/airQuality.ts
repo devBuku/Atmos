@@ -77,7 +77,6 @@ export interface PollutantConfig {
   symbol: string;
   description: string;
   unit: string;
-  // Thresholds defining the upper bound for Good, Fair, Moderate, Poor (above Poor is Very Poor)
   thresholds: [number, number, number, number];
   maxScale: number;
 }

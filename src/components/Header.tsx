@@ -28,7 +28,6 @@ export default function Header({
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          {/* Mobile Air Quality quick action button */}
           <button
             type="button"
             onClick={onOpenMobileAirQuality}
