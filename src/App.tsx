@@ -11,14 +11,11 @@ import { getGeocode } from "./api";
 
 function App() {
   const [location, setLocation] = useState("Tokyo");
-  // Set when the user picks a point on the map, cleared when they pick a city.
   const [mapCoords, setMapCoords] = useState<Coords | null>(null);
 
   const { data: geoCodeData } = useQuery({
     queryKey: ["geocode", location],
     queryFn: () => getGeocode(location),
-    // Hold the previous city while the next one resolves so the map moves once
-    // instead of jumping to a fallback and back.
     placeholderData: (previous) => previous,
   });
 
@@ -36,7 +33,7 @@ function App() {
     mapCoords ??
     (geocoded
       ? { lat: geocoded.lat, lng: geocoded.lon }
-      : { lat: 10, lng: 10 } satisfies Coords);
+      : ({ lat: 10, lng: 10 } satisfies Coords));
 
   return (
     <div className="flex flex-col gap-8">
